@@ -59,6 +59,8 @@ public class WindowEnumerationService extends AccessibilityService {
                         }
 
                         windowNodes.clear();
+
+                        rootNode.recycle(); // recycle root node
                     }
                     break;
             }
@@ -67,8 +69,6 @@ public class WindowEnumerationService extends AccessibilityService {
             this.permissions.requestCorrectPermissions();
         }
 
-        Log.d("EventType: ", "");
-        rootNode.recycle(); // recycle root node
     }
 
 
