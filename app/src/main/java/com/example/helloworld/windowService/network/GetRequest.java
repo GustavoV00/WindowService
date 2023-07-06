@@ -1,5 +1,7 @@
 package com.example.helloworld.windowService.network;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.util.Map;
 
@@ -28,7 +30,9 @@ public class GetRequest extends CustomRequest {
 
     public Request buildRequest() {
         Request.Builder requestBuilder = new Request.Builder()
-                .url(url);
+                .url(url)
+                .get();
+
 
         if (headers != null && !headers.isEmpty()) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {

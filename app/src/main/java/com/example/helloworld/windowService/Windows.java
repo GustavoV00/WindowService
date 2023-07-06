@@ -1,13 +1,20 @@
 package com.example.helloworld.windowService;
 
+import static com.example.helloworld.windowService.network.CustomRequestFactory.createPostRequest;
+
+import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 
 import com.example.helloworld.windowService.network.CustomRequest;
+import com.example.helloworld.windowService.network.RequestActions;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+
+import okhttp3.Request;
 
 public class Windows {
 
@@ -59,6 +66,18 @@ public class Windows {
     }
 
     public void sendWindowsToServer(List<String> buffer) {
+        RequestActions requestActions = new RequestActions();
+        CustomRequest postRequest = createPostRequest("http://172.29.117.71:5000/windows", buffer.get(0));
+        Request request = postRequest.buildRequest();
+        CompletableFuture<String> future = requestActions.sendRequest(request, postRequest);
+
+        future.thenAcceptAsync(response -> {
+            Log.d("Response", "Success: " + response);
+        }).exceptionally(ex -> {
+//            ex.printStackTrace();
+            Log.d("Response", "Failure2: " + ex);
+            return null;
+        });
 
     }
 

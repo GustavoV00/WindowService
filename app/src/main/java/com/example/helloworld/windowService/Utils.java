@@ -9,20 +9,26 @@ import androidx.annotation.NonNull;
 
 import com.example.helloworld.windowService.network.CustomRequest;
 import com.example.helloworld.windowService.network.GetRequest;
+import com.example.helloworld.windowService.network.RequestActions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class Utils {
+
+    private RequestActions requestActions;
 
     public Utils() {
 
@@ -59,23 +65,26 @@ public class Utils {
     }
 
     public boolean verifyIfServerIsUp() {
-        try {
-            CustomRequest getRequest = createGetRequest("http://127.0.0.1:5000/test");
-            Request request = getRequest.buildRequest();
+        requestActions = new RequestActions();
+        CustomRequest getRequest = createGetRequest("http://172.29.117.71:5000/test");
+        Request request = getRequest.buildRequest();
+        CompletableFuture<String> future = requestActions.sendRequest(request, getRequest);
 
-            Response response = getRequest.getClient().newCall(request).execute();
-            Log.d("VerifyIfServerIsUp: ", "Response: " + response);
-            return true;
+        future.thenAcceptAsync(response -> {
+            Log.d("Response", "Success: " + response);
+        }).exceptionally(ex -> {
+//            ex.printStackTrace();
+            Log.d("Response", "Failure2: " + ex);
+            return null;
+        });
 
-        } catch (IOException e) {
-            Log.d("VerifyIfServerIsUp: ", "Exception: " + e);
-            return false;
-        }
+
+        return true;
     }
 
     public boolean bufferIsFull(@NonNull List<String> buffer) {
-        if(buffer.size() >= 10)
-            return true;
-        return false;
+//        if(buffer.size() >= 10)
+        return true;
+//        return false;
     }
 }
