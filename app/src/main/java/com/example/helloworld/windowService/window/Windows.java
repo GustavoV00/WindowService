@@ -1,4 +1,4 @@
-package com.example.helloworld.windowService;
+package com.example.helloworld.windowService.window;
 
 import static com.example.helloworld.windowService.network.CustomRequestFactory.createPostRequest;
 
@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 
+import com.example.helloworld.windowService.Utils;
 import com.example.helloworld.windowService.network.CustomRequest;
 import com.example.helloworld.windowService.network.RequestActions;
 

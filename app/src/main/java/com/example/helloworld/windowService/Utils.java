@@ -70,7 +70,7 @@ public class Utils {
         Request request = getRequest.buildRequest();
         CompletableFuture<String> future = requestActions.sendRequest(request, getRequest);
 
-        future.thenAcceptAsync(response -> {
+        future.thenAccept(response -> {
             Log.d("Response", "Success: " + response);
         }).exceptionally(ex -> {
 //            ex.printStackTrace();

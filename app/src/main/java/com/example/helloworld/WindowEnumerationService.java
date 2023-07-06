@@ -4,23 +4,18 @@ import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.example.helloworld.windowService.Permissions;
 import com.example.helloworld.windowService.Utils;
-import com.example.helloworld.windowService.Windows;
+import com.example.helloworld.windowService.window.Windows;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import okhttp3.OkHttpClient;
 
 
 public class WindowEnumerationService extends AccessibilityService {
@@ -59,7 +54,6 @@ public class WindowEnumerationService extends AccessibilityService {
                         }
 
                         windowNodes.clear();
-
                         rootNode.recycle(); // recycle root node
                     }
                     break;
