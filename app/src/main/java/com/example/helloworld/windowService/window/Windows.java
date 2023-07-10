@@ -31,12 +31,11 @@ public class Windows {
     }
 
     public boolean compareLatestWindowsEvents(List<WindowsNodesInfos> windowNodes) {
-        System.out.println(windowNodes);
+//        System.out.println(windowNodes);
         if (!windowNodes.equals(lastWindowsNodes)) {
             lastWindowsNodes.clear();
             lastWindowsNodes.addAll(windowNodes);
             return true;
-//            utils.printWindowData(lastWindowsNodes);
 
         }
         return false;
@@ -79,13 +78,14 @@ public class Windows {
         }
     }
 
-    public void sendWindowsToServer(List<String> buffer) {
+    public void sendWindowsToServer(String buffer) {
         RequestActions requestActions = new RequestActions();
-        CustomRequest postRequest = createPostRequest("http://172.29.117.71:5000/windows", buffer.get(0));
+//        System.out.println(buffer);
+        CustomRequest postRequest = createPostRequest("http://172.29.117.71:5000/windows", buffer);
         Request request = postRequest.buildRequest();
         CompletableFuture<String> future = requestActions.sendRequest(request, postRequest);
 
-        future.thenAcceptAsync(response -> {
+        future.thenAccept(response -> {
             Log.d("Response", "Success: " + response);
         }).exceptionally(ex -> {
 //            ex.printStackTrace();

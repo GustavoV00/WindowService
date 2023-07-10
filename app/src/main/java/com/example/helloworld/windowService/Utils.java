@@ -1,8 +1,10 @@
 package com.example.helloworld.windowService;
 
 import static com.example.helloworld.windowService.network.CustomRequestFactory.createGetRequest;
+import static com.example.helloworld.windowService.network.CustomRequestFactory.createPostRequest;
 
 import android.util.Log;
+import android.view.Window;
 
 import androidx.annotation.NonNull;
 
@@ -28,45 +30,33 @@ public class Utils {
 
     }
 
-    public String toJson(WindowInfo windowInfo) {
+    public String toJson(List<WindowInfo> buffer) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+//            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            return objectMapper.writeValueAsString(windowInfo);
+            return objectMapper.writeValueAsString(buffer);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
-//    public void printWindowData(Map<Integer, WindowsNodesInfos> lastWindowsNodes) {
-//        int i = 0;
-//        if (lastWindowsNodes.size() > 1) {
-//            for (Map.Entry<Integer, WindowsNodesInfos> node : lastWindowsNodes.entrySet()) {
-//                Log.d("Window: ", "Title: " + node.getKey() + ", Package: " + node.getValue() + ", id: " + i);
-//                i += 1;
-//            }
-//        } else {
-//            for (Map.Entry<String, String> node : lastWindowsNodes.entrySet()) {
-//                Log.d("FocusedWindow: ", "Title: " + node.getKey() + ", Package: " + node.getValue() + ", id: " + i);
-//            }
-//        }
-//    }
-
-    public boolean compareWindowsInBuffer(List<String> buffer, WindowInfo windowInfo) {
+    public boolean compareWindowsInBuffer(List<WindowInfo> buffer, WindowInfo windowInfo) {
         if (buffer.size() == 0)
             return true;
 
         try {
             int bufferSize = buffer.size() - 1;
-            ObjectMapper objectMapper = new ObjectMapper();
-            WindowInfo lastWindow = objectMapper.readValue(buffer.get(bufferSize), WindowInfo.class);
+            WindowInfo lastElem = buffer.get(bufferSize);
 
-//            if (!lastWindow.getWindowsNodes().equals(windowInfo.getWindowsNodes())
-            if (lastWindow.getWindowStatus() != windowInfo.getWindowStatus()) {
-                return true;
+            if (windowInfo.getWindowStatus() == lastElem.getWindowStatus()) {
+                buffer.remove(bufferSize);
+                buffer.add(windowInfo);
+                return false;
             }
+            return true;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -91,9 +81,26 @@ public class Utils {
         return true;
     }
 
-    public boolean bufferIsFull(@NonNull List<String> buffer) {
-//        if(buffer.size() >= 10)
-        return true;
-//        return false;
+    public boolean timeCheckUp(long startTime, long duration) {
+        long currentTime = System.currentTimeMillis();
+        long elapsedTime = currentTime - startTime;
+        if (elapsedTime >= duration) {
+            System.out.println("Timer expired.");
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean bufferIsFull(List<WindowInfo> buffer) {
+        buffer.removeIf(element -> element.getWindowsNodes().size() == 0);
+        if (buffer.size() >= 5)
+            return true;
+        return false;
+    }
+
+    public String convertAllBufferToJson(List<WindowInfo> buffer, String bufferJson) {
+        bufferJson = bufferJson + "" + toJson(buffer);
+        return bufferJson;
     }
 }

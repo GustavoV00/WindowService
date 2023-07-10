@@ -27,10 +27,13 @@ public class WindowEnumerationService extends AccessibilityService {
     private Permissions permissions;
     private Utils utils;
     private Integer bufferIndex;
-    List<String> buffer = new ArrayList<>();
-
+    private long duration;
+    private long startTime;
+    private List<WindowInfo> buffer = new ArrayList<>();
+    private String jsonBuffer;
 
     public WindowEnumerationService() {
+
     }
 
     public WindowEnumerationService(Activity activity) {
@@ -47,24 +50,22 @@ public class WindowEnumerationService extends AccessibilityService {
                     WindowInfo windowInfo = new WindowInfo();
                     if (rootNode != null) {
                         this.windows.enumerateWindows(rootNode, windowInfo.getWindowsNodes());
-                        if (this.windows.compareLatestWindowsEvents(windowInfo.getWindowsNodes())) {
-                            windowInfo.setWindowStatus(this.windows.verifyFocusedWindows(windowInfo.getWindowsNodes()));
-                            windowInfo.setTimestamp();
+                        windowInfo.setWindowStatus(this.windows.verifyFocusedWindows(windowInfo.getWindowsNodes()));
+                        windowInfo.setTimestamp();
 
-//                            if (this.utils.compareWindowsInBuffer(buffer, windowInfo)) {
-                                buffer.add(this.utils.toJson(windowInfo));
-                                Log.d("Buffer test: ", buffer.toString());
-//                        if (this.utils.verifyIfServerIsUp() && utils.bufferIsFull(buffer))
-//                            this.windows.sendWindowsToServer(buffer);
-//                        else {
-//                            Log.d("Server", "Server is down");
-//                        }
-
-//                            }
-
+                        if (this.utils.compareWindowsInBuffer(buffer, windowInfo)) {
+                            buffer.add(windowInfo);
+                            Log.d("Buffer size: ", "" + buffer.size());
+                            if (this.utils.timeCheckUp(startTime, duration) || utils.bufferIsFull(buffer)) {
+                                jsonBuffer = this.utils.convertAllBufferToJson(buffer, jsonBuffer);
+                                Log.d("Buffer test: ", jsonBuffer);
+                                this.startTime = System.currentTimeMillis();
+                                this.windows.sendWindowsToServer(jsonBuffer);
+                                buffer.clear();
+                                jsonBuffer = "";
+                            }
                         }
-
-                        windowInfo.getWindowsNodes().clear();
+//                        windowInfo.getWindowsNodes().clear();
                         rootNode.recycle(); // recycle root node
                     }
                     break;
@@ -79,6 +80,10 @@ public class WindowEnumerationService extends AccessibilityService {
 
     @Override
     public void onInterrupt() {
+        buffer.removeIf(element -> element.getWindowsNodes().size() == 0);
+        jsonBuffer = this.utils.convertAllBufferToJson(buffer, jsonBuffer);
+        this.windows.sendWindowsToServer(jsonBuffer);
+
         Log.d("WindowEnumeration: ", "onInterrupt");
     }
 
@@ -95,6 +100,10 @@ public class WindowEnumerationService extends AccessibilityService {
         this.utils = new Utils();
         this.permissions = new Permissions(this.context, this.activity);
         this.bufferIndex = 0;
+
+        this.duration = 1 * 60 * 1000; // 2 minutes in millisecond
+        this.startTime = System.currentTimeMillis();
+        this.jsonBuffer = "";
 
         Log.d("WindowEnumeration: ", "onServiceConnected " + info);
     }
