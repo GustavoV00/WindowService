@@ -10,16 +10,19 @@ import com.example.helloworld.windowService.Utils;
 import com.example.helloworld.windowService.network.CustomRequest;
 import com.example.helloworld.windowService.network.RequestActions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import okhttp3.Request;
 
 public class Windows {
 
-    private Map<String, String> lastWindowsNodes = new HashMap<>();
+    private List<WindowsNodesInfos> lastWindowsNodes = new ArrayList<>();
     private Utils utils;
 
 
@@ -27,16 +30,20 @@ public class Windows {
         this.utils = new Utils();
     }
 
-    public void compareLatestWindowsEvents(Map<String, String> windowNodes) {
+    public boolean compareLatestWindowsEvents(List<WindowsNodesInfos> windowNodes) {
+        System.out.println(windowNodes);
         if (!windowNodes.equals(lastWindowsNodes)) {
             lastWindowsNodes.clear();
-            lastWindowsNodes.putAll(windowNodes);
-            utils.printWindowData(lastWindowsNodes);
+            lastWindowsNodes.addAll(windowNodes);
+            return true;
+//            utils.printWindowData(lastWindowsNodes);
+
         }
+        return false;
     }
 
-    public void enumerateWindows(AccessibilityNodeInfo node, Map<String, String> windowNodes) {
-        if (windowNodes.containsKey(node) || node == null) {
+    public void enumerateWindows(AccessibilityNodeInfo node, List<WindowsNodesInfos> windowNodes) {
+        if (node == null) {
             return;
         }
 
@@ -50,19 +57,25 @@ public class Windows {
         }
     }
 
-    public void addWindowsNode(AccessibilityNodeInfo node, Map<String, String> windowNodes) {
+    public void addWindowsNode(AccessibilityNodeInfo node, List<WindowsNodesInfos> windowNodes) {
 
         if (node.getClassName().equals("android.widget.FrameLayout")) {
             String windowTitle = node.getContentDescription() != null && !node.getContentDescription().toString().isEmpty() ? node.getContentDescription().toString() : "";
             String packageName = node.getPackageName() != null ? node.getPackageName().toString() : "Package not available";
 
+
+            boolean hasTitle = true;
             if (windowTitle.equals("")) {
                 String[] result = packageName.split("\\.");
                 windowTitle = result[result.length - 1];
+                hasTitle = false;
             }
             windowTitle = windowTitle.substring(0, 1).toUpperCase() + windowTitle.substring(1);
 
-            windowNodes.put(windowTitle, packageName);
+            WindowTitleInfo windowTitleInfo = new WindowTitleInfo(windowTitle, hasTitle);
+            WindowsNodesInfos windowsNodesInfos = new WindowsNodesInfos(windowTitleInfo, packageName);
+            if(!windowNodes.contains(windowsNodesInfos))
+                windowNodes.add(windowsNodesInfos);
         }
     }
 
@@ -79,7 +92,12 @@ public class Windows {
             Log.d("Response", "Failure2: " + ex);
             return null;
         });
+    }
 
+    public WindowStatus verifyFocusedWindows(List<WindowsNodesInfos> nodes) {
+        if (nodes.size() > 1)
+            return WindowStatus.SWITCH;
+        return WindowStatus.ACTIVE;
     }
 
 }

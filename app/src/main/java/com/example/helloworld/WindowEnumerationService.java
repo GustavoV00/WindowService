@@ -10,6 +10,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.example.helloworld.windowService.Permissions;
 import com.example.helloworld.windowService.Utils;
+import com.example.helloworld.windowService.window.WindowInfo;
 import com.example.helloworld.windowService.window.Windows;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class WindowEnumerationService extends AccessibilityService {
     private Context context;
     private Permissions permissions;
     private Utils utils;
+    private Integer bufferIndex;
     List<String> buffer = new ArrayList<>();
 
 
@@ -42,18 +44,27 @@ public class WindowEnumerationService extends AccessibilityService {
         if (this.permissions.hasCorrectPermissions()) {
             switch (eventType) {
                 case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
-                    Map<String, String> windowNodes = new HashMap<>();
+                    WindowInfo windowInfo = new WindowInfo();
                     if (rootNode != null) {
-                        this.windows.enumerateWindows(rootNode, windowNodes);
-                        this.windows.compareLatestWindowsEvents(windowNodes);
-                        buffer.add(this.utils.hashMapToJson(windowNodes));
-                        if (this.utils.verifyIfServerIsUp() && utils.bufferIsFull(buffer))
-                            this.windows.sendWindowsToServer(buffer);
-                        else {
-                            Log.d("Server", "Server is down");
+                        this.windows.enumerateWindows(rootNode, windowInfo.getWindowsNodes());
+                        if (this.windows.compareLatestWindowsEvents(windowInfo.getWindowsNodes())) {
+                            windowInfo.setWindowStatus(this.windows.verifyFocusedWindows(windowInfo.getWindowsNodes()));
+                            windowInfo.setTimestamp();
+
+//                            if (this.utils.compareWindowsInBuffer(buffer, windowInfo)) {
+                                buffer.add(this.utils.toJson(windowInfo));
+                                Log.d("Buffer test: ", buffer.toString());
+//                        if (this.utils.verifyIfServerIsUp() && utils.bufferIsFull(buffer))
+//                            this.windows.sendWindowsToServer(buffer);
+//                        else {
+//                            Log.d("Server", "Server is down");
+//                        }
+
+//                            }
+
                         }
 
-                        windowNodes.clear();
+                        windowInfo.getWindowsNodes().clear();
                         rootNode.recycle(); // recycle root node
                     }
                     break;
@@ -83,6 +94,7 @@ public class WindowEnumerationService extends AccessibilityService {
         this.windows = new Windows();
         this.utils = new Utils();
         this.permissions = new Permissions(this.context, this.activity);
+        this.bufferIndex = 0;
 
         Log.d("WindowEnumeration: ", "onServiceConnected " + info);
     }
