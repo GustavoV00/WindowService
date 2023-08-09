@@ -65,7 +65,7 @@ public class Utils {
 
     public boolean verifyIfServerIsUp() {
         requestActions = new RequestActions();
-        CustomRequest getRequest = createGetRequest("http://172.29.117.71:5000/test");
+        CustomRequest getRequest = createGetRequest("http://18.189.157.240/windows");
         Request request = getRequest.buildRequest();
         CompletableFuture<String> future = requestActions.sendRequest(request, getRequest);
 

@@ -81,7 +81,8 @@ public class Windows {
     public void sendWindowsToServer(String buffer) {
         RequestActions requestActions = new RequestActions();
 //        System.out.println(buffer);
-        CustomRequest postRequest = createPostRequest("http://172.29.117.71:5000/windows", buffer);
+//        CustomRequest postRequest = createPostRequest("http://172.29.117.71:8080/windows", buffer);
+        CustomRequest postRequest = createPostRequest("http://18.189.157.240/windows ", buffer);
         Request request = postRequest.buildRequest();
         CompletableFuture<String> future = requestActions.sendRequest(request, postRequest);
 
