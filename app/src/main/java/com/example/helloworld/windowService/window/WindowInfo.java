@@ -10,6 +10,7 @@ import java.util.Map;
 public class WindowInfo {
     private WindowStatus windowStatus;
     private String timestamp;
+    private String username;
     private List<WindowsNodesInfos> windowsNodes = new ArrayList<>();
 
     public List<WindowsNodesInfos> getWindowsNodes() {
@@ -26,6 +27,13 @@ public class WindowInfo {
 
     public void setWindowStatus(WindowStatus windowStatus) {
         this.windowStatus = windowStatus;
+    }
+
+    public void setUser(String username) {
+        this.username = username;
+    }
+    public String getUser() {
+        return this.username;
     }
 
     public String getTimestamp() {

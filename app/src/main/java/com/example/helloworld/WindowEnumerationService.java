@@ -13,6 +13,7 @@ import com.example.helloworld.windowService.Utils;
 import com.example.helloworld.windowService.window.WindowInfo;
 import com.example.helloworld.windowService.window.Windows;
 
+import java.security.KeyPair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,14 +32,17 @@ public class WindowEnumerationService extends AccessibilityService {
     private long startTime;
     private List<WindowInfo> buffer = new ArrayList<>();
     private String jsonBuffer;
+    private static DeviceInfoUtils deviceInfo = new DeviceInfoUtils();
+    private String username;
 
     public WindowEnumerationService() {
 
     }
 
-    public WindowEnumerationService(Activity activity) {
-        this.activity = activity;
-    }
+//    public WindowEnumerationService(Activity activity, String username) {
+//        this.activity = activity;
+//
+//    }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -48,10 +52,11 @@ public class WindowEnumerationService extends AccessibilityService {
             switch (eventType) {
                 case AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED:
                     WindowInfo windowInfo = new WindowInfo();
-                    if (rootNode != null) {
+                if (rootNode != null) {
                         this.windows.enumerateWindows(rootNode, windowInfo.getWindowsNodes());
                         windowInfo.setWindowStatus(this.windows.verifyFocusedWindows(windowInfo.getWindowsNodes()));
                         windowInfo.setTimestamp();
+                        windowInfo.setUser(username);
 
                         if (this.utils.compareWindowsInBuffer(buffer, windowInfo)) {
                             buffer.add(windowInfo);
@@ -74,9 +79,7 @@ public class WindowEnumerationService extends AccessibilityService {
         } else {
             this.permissions.requestCorrectPermissions();
         }
-
     }
-
 
     @Override
     public void onInterrupt() {
@@ -95,6 +98,7 @@ public class WindowEnumerationService extends AccessibilityService {
         setServiceInfo(info);
 
         setContext(getApplicationContext());
+        this.username = deviceInfo.generateUniqueIdentifier(this.context);
 
         this.windows = new Windows();
         this.utils = new Utils();
@@ -105,6 +109,7 @@ public class WindowEnumerationService extends AccessibilityService {
         this.startTime = System.currentTimeMillis();
         this.jsonBuffer = "";
 
+        Log.d("username_test", this.username);
         Log.d("WindowEnumeration: ", "onServiceConnected " + info);
     }
 

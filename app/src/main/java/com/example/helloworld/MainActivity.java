@@ -14,6 +14,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import java.security.KeyPair;
+
 public class MainActivity extends AppCompatActivity {
     private WindowEnumerationService windowEnumerationService;
 
@@ -22,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        windowEnumerationService = new WindowEnumerationService(this);
+//        new WindowEnumerationService(this, username);
+        new WindowEnumerationService();
     }
 }
 

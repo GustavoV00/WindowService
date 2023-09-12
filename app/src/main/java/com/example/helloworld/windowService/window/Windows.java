@@ -24,6 +24,7 @@ public class Windows {
 
     private List<WindowsNodesInfos> lastWindowsNodes = new ArrayList<>();
     private Utils utils;
+    private String username;
 
 
     public Windows() {
@@ -82,7 +83,8 @@ public class Windows {
         RequestActions requestActions = new RequestActions();
 //        System.out.println(buffer);
 //        CustomRequest postRequest = createPostRequest("http://172.29.117.71:8080/windows", buffer);
-        CustomRequest postRequest = createPostRequest("http://18.189.157.240/windows ", buffer);
+//        CustomRequest postRequest = createPostRequest("http://18.189.157.240/windows ", buffer);
+        CustomRequest postRequest = createPostRequest("http://18.119.113.54/windows ", buffer);
         Request request = postRequest.buildRequest();
         CompletableFuture<String> future = requestActions.sendRequest(request, postRequest);
 
@@ -100,5 +102,4 @@ public class Windows {
             return WindowStatus.SWITCH;
         return WindowStatus.ACTIVE;
     }
-
 }
