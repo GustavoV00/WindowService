@@ -24,8 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        new WindowEnumerationService(this, username);
-        new WindowEnumerationService();
+        new WindowEnumerationService(this);
     }
 }
 

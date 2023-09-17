@@ -28,8 +28,6 @@ public class RequestActions {
         OkHttpClient client = new OkHttpClient();
         CompletableFuture<String> future = new CompletableFuture<>();
 
-//        Log.d("Request", "makeRequest: " + request.toString());
-//        Log.d("RequestType", "makeRequest: " + requestType.toString());
          client.newCall(request).enqueue(new Callback() {
              @Override
              public void onFailure(@NonNull Call call, @NonNull IOException e) {

