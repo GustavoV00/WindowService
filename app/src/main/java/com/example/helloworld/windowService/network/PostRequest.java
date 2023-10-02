@@ -1,12 +1,10 @@
 package com.example.helloworld.windowService.network;
 
-import java.io.IOException;
 import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class PostRequest extends CustomRequest {
     private String requestBody;

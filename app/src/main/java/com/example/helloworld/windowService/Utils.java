@@ -4,20 +4,14 @@ import static com.example.helloworld.windowService.network.CustomRequestFactory.
 import static com.example.helloworld.windowService.network.CustomRequestFactory.createPostRequest;
 
 import android.util.Log;
-import android.view.Window;
-
-import androidx.annotation.NonNull;
 
 import com.example.helloworld.windowService.network.CustomRequest;
 import com.example.helloworld.windowService.network.RequestActions;
 import com.example.helloworld.windowService.window.WindowInfo;
-import com.example.helloworld.windowService.window.Windows;
-import com.example.helloworld.windowService.window.WindowsNodesInfos;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import okhttp3.Request;

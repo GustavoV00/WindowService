@@ -5,7 +5,6 @@ import android.provider.Settings;
 
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.UUID;
 
 public class DeviceInfoUtils {

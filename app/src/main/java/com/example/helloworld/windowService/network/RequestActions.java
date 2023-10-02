@@ -1,16 +1,9 @@
 package com.example.helloworld.windowService.network;
 
-import static kotlinx.coroutines.BuildersKt.withContext;
-
-import android.util.Log;
-
 import androidx.annotation.NonNull;
 
 import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
-
-import kotlinx.coroutines.Dispatchers;
-import kotlinx.coroutines.GlobalScope;
 
 import okhttp3.Call;
 import okhttp3.Callback;

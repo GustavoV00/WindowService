@@ -1,12 +1,8 @@
 package com.example.helloworld.windowService.network;
 
-import android.util.Log;
-
-import java.io.IOException;
 import java.util.Map;
 
 import okhttp3.Request;
-import okhttp3.Response;
 
 public class GetRequest extends CustomRequest {
 

@@ -3,7 +3,8 @@
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">127.0.0.1</domain>
-        <domain includeSubdomains="true">18.117.184.130</domain>
+        <domain includeSubdomains="true">200.238.144.3</domain>
+        <domain includeSubdomains="true">200.238.144.3:8080</domain>
         <domain includeSubdomains="true">localhost</domain>
     </domain-config>
 </network-security-config>

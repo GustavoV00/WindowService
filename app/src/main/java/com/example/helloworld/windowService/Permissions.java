@@ -1,10 +1,8 @@
 package com.example.helloworld.windowService;
 
 import static android.Manifest.permission.INTERNET;
-import static androidx.core.app.ActivityCompat.requestPermissions;
 
 import android.app.Activity;
-import android.app.Instrumentation;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;

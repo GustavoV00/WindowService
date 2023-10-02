@@ -11,11 +11,7 @@ import com.example.helloworld.windowService.network.CustomRequest;
 import com.example.helloworld.windowService.network.RequestActions;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 import okhttp3.Request;
@@ -81,7 +77,7 @@ public class Windows {
 
     public void sendWindowsToServer(String buffer) {
         RequestActions requestActions = new RequestActions();
-        CustomRequest postRequest = createPostRequest("http://18.117.184.130/windows", buffer);
+        CustomRequest postRequest = createPostRequest("http://200.238.144.3:8080/windows", buffer);
         Request request = postRequest.buildRequest();
         CompletableFuture<String> future = requestActions.sendRequest(request, postRequest);
 
